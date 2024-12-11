@@ -1,5 +1,5 @@
-# Use an official Maven image for building the application
-FROM maven:3.8.5-openjdk-11 AS build
+# Use Maven with Java 17 for building the application
+FROM maven:3.8.5-openjdk-17 AS build
 
 # Set working directory
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . .
 RUN mvn clean package
 
 # Use the Tomcat base image for deployment
-FROM tomcat:9.0-jdk11-openjdk
+FROM tomcat:9.0-jdk17
 
 # Set environment variables
 ENV CATALINA_HOME /usr/local/tomcat
