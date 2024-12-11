@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/quizzes")
-@CrossOrigin(origins = "http://localhost:3000") // Adjust for your frontend
+@CrossOrigin(origins = "*") // Adjust for your frontend
 public class QuizController {
 
     @Autowired
