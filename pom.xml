@@ -12,7 +12,7 @@
 	<artifactId>JFSDProject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>JFSDProject</name>
+	<name>lms</name>
 	<description>Spring Boot with MVC and JPA Project Demo</description>
 	<url/>
 	<licenses>
