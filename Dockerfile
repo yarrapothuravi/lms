@@ -1,29 +1,28 @@
-# Use an official OpenJDK runtime as the base image
+# Use an official Maven image for building the application
+FROM maven:3.8.5-openjdk-11 AS build
+
+# Set working directory
+WORKDIR /app
+
+# Copy the project files into the container
+COPY . .
+
+# Build the WAR file
+RUN mvn clean package
+
+# Use the Tomcat base image for deployment
 FROM tomcat:9.0-jdk11-openjdk
 
-# Set environment variables for deployment
+# Set environment variables
 ENV CATALINA_HOME /usr/local/tomcat
 ENV WAR_FILE_NAME lms.war
 ENV DEPLOY_DIR $CATALINA_HOME/webapps
 
-# Create a directory for the application
-WORKDIR $CATALINA_HOME
-
-# Copy the WAR file to the container
-COPY target/$WAR_FILE_NAME $DEPLOY_DIR/
-
-# Add a startup script to check deployment and start the server
-RUN echo '#!/bin/bash\n' \
-    'if [ ! -f $DEPLOY_DIR/$WAR_FILE_NAME ]; then\n' \
-    '  echo "WAR file not found, please provide it for deployment!"\n' \
-    '  exit 1\n' \
-    'fi\n' \
-    'echo "Starting Tomcat server..."\n' \
-    '$CATALINA_HOME/bin/catalina.sh run\n' > startup.sh \
-    && chmod +x startup.sh
+# Copy the WAR file from the build stage
+COPY --from=build /app/target/$WAR_FILE_NAME $DEPLOY_DIR/
 
 # Expose the default Tomcat port
 EXPOSE 8080
 
-# Run the startup script
-CMD ["./startup.sh"]
+# Start the Tomcat server
+CMD ["catalina.sh", "run"]
